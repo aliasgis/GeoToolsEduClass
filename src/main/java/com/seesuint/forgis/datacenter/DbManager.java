@@ -1,6 +1,8 @@
 package com.seesuint.forgis.datacenter;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.GeometryType;
 import org.opengis.geometry.Geometry;
+
 
 public class DbManager {
 	public Map getDbParam() {
@@ -45,25 +48,38 @@ public class DbManager {
 		return DBGISParams;
 	}
 
-	public String[] LayerList() {
+	public String[] LayerList(Map Param) {
 
-		String temp,tempnm,temptype = null;
+		String temp,geomnm,temptype = null;
 		DataStore dbstore = null;
 		FeatureCollection fea;
 		String[] sty = null;
 		String[] layername = null;
 		String[] newArray =null;
-		 Map map = getDbParam();
+		// Map map = getDbParam();
 		 SimpleFeatureSource featureSource;
 		 SimpleFeatureCollection fc;
-		 GeometryType stype;
+
 		// Vector<String> vector = null;
 		try {
-			dbstore = DataStoreFinder.getDataStore(map);
+			dbstore = DataStoreFinder.getDataStore(Param);
 
 			sty = dbstore.getTypeNames();
-			///temp = sty.toString();
 
+
+			for (int i=0;i<sty.length;i++) {
+
+	               featureSource = dbstore.getFeatureSource(sty[i]);
+	              // GeometryDescriptor g = featureSource.getSchema().getGeometryDescriptor()
+	                temptype= featureSource.getSchema().getGeometryDescriptor().getType().toString();
+	                geomnm= temptype.replaceAll("GeometryTypeImpl ", "");
+	                System.out.println(geomnm);
+	                sty[i] = sty[i]+":"+geomnm;
+			}
+
+
+			///temp = sty.toString();
+/**
 			//layername = temp.split(",");
 			int stnum =sty.length;
             String typenm = null;
@@ -74,11 +90,13 @@ public class DbManager {
 			for (int i=0;i<stnum;i++) {
 
 				 tempnm = sty[i];
-		//		 System.out.println(tempnm);
+				 System.out.println(tempnm);
 
                featureSource = dbstore.getFeatureSource(tempnm);
 
 		        SimpleFeatureType schema = (SimpleFeatureType) featureSource.getSchema();
+
+		      System.out.println("size:"+schema.getDescriptors().size());
 				try {
 
 
@@ -102,52 +120,43 @@ public class DbManager {
                 } else {
                 	   datatype=":no GISData";
                 }
-    	//	    String geom = schema.getGeometryDescriptor().getType().getBinding().getSimpleName();
-
-
-			 // try {
-			    //    geomType.getSimpleName().toString()
-                 //GeometryType g = gDes.getType();
-                	 newArray[i] = sty[i]+datatype;
-
-			//  } catch(Exception e) {
-
-				//     newArray[i] = sty[i]+" : ";
-
-			  //}
-
-
 
 			}
-
-           // sty = newArray;
-
-
-			//System.out.println(sty.toString());
+              **/
 		} catch (Exception e) {
 			System.out.println("error2!!" + e.getMessage());
 		}
 
 		dbstore.dispose();
-		return newArray;
+		return sty;
 	}
 
-	public Boolean getConnect(Map map) throws Exception {
+	public Boolean getConnect(Map map) throws IOException, SQLException  {
 
 		boolean c_str = false;
 		DataStore dbstore = null;
 		Connection con = null;
+
+		dbstore = DataStoreFinder.getDataStore(map);
+		con = ((JDBCDataStore) dbstore).getDataSource().getConnection();
+
+
 		try {
 			dbstore = DataStoreFinder.getDataStore(map);
 			con = ((JDBCDataStore) dbstore).getDataSource().getConnection();
-			c_str = true;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			c_str = false;
-		} finally {
-			dbstore.dispose();
-			con.close();
-		}
+			 System.out.println("데이터 베이스에 정상적으로 접속했습니다");
+			 c_str = true;
+			   con.close();
+			  } catch (SQLException e) {
+			   System.out.println(e.getMessage());
+			   e.printStackTrace();
+			  } finally {
+				  dbstore.dispose();
+				 con.close();
+
+			  }
+
+		System.out.println("get"+c_str);
 		return c_str;
 	}
 

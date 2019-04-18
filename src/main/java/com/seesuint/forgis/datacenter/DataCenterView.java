@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -434,7 +435,31 @@ public class DataCenterView extends JFrame {
 
 				columns.add("테이블 명칭");
 
-				String[] layers = dbms.LayerList();
+				String type = txt_dbtype.getText();
+				String Ip = txt_ip.getText();
+				String Port = txt_port.getText();
+				int Pt = Integer.parseInt(Port);
+				String Schema = txt_sheme.getText();
+				String db = txt_database.getText();
+				String id = txt_id.getText();
+				String pass = txt_pass.getText();
+
+				Map<String, Object> params = new HashMap();
+				params.put("dbtype", type);
+				params.put("host", Ip);
+				params.put("port", Pt);
+				params.put("schema", Schema);
+				params.put("database", db);
+				params.put("user", id);
+				params.put("passwd", pass);
+
+				String[] layers = dbms.LayerList(params);
+				if(layers.length==0) {
+				  return;
+				}
+
+
+
 				for (int i = 0; i < layers.length; i++) {
 					vc.addElement(layers[i]);
 				}
@@ -472,21 +497,34 @@ public class DataCenterView extends JFrame {
 				params.put("user", id);
 				params.put("passwd", pass);
 				params.put("validate connections", true);
+
+				// System.out.println(""+scr);
+				JFrame frame = new JFrame("JOptionPane showMessageDialog example");
 				DbManager dbms = new DbManager();
 				try {
 					scr = dbms.getConnect(params);
+					System.out.println("time:"+scr);
 					// System.out.println(""+scr);
-					JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+				//	JFrame frame = new JFrame("JOptionPane showMessageDialog example");
 					if (scr == true) {
 						JOptionPane.showMessageDialog(frame, "Ok Connect!!", "DataCenter",
 								JOptionPane.INFORMATION_MESSAGE);
+						return;
 					} else {
 						JOptionPane.showMessageDialog(frame, "Fail Connect!! Check Information", "DataCenter",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 
 				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(frame, "Fail Connection!! Check Information", "DataCenter",
+							JOptionPane.INFORMATION_MESSAGE);
 
+				} finally {
+					if(scr==true) {
+				         return;
+					} else {
+						return;
+					}
 				}
 			}
 		});
@@ -550,7 +588,7 @@ public class DataCenterView extends JFrame {
 			    }
 
 
-			    JOptionPane.showMessageDialog(frame, type+"shp 파일이 생성되었습니다.", "ForGIS DataCenter",
+			    JOptionPane.showMessageDialog(frame," 선택 된 경로에 "+layernm+" shp 파일이 생성되었습니다.", "ForGIS DataCenter",
 						JOptionPane.INFORMATION_MESSAGE);
 			    Cursor EndCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 				setCursor(EndCursor);
