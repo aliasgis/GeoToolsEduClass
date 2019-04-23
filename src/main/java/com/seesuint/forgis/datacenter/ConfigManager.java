@@ -33,14 +33,14 @@ public class ConfigManager {
 			// ini 파일 읽기
 			p.load(new FileInputStream(getPath()));
 
-			setDbType(p.getProperty("dbtype"));
-			setHost(p.getProperty("ip"));
-			setPort(p.getProperty("port"));
-			setDatabase(p.getProperty("database"));
-			setId(p.getProperty("id"));
-			setPassword(p.getProperty("password"));
-			setSchema(p.getProperty("schema"));
-			setCoordsys(p.getProperty("usercoordsys"));
+			setDbType(p.getProperty("dbtype").trim());
+			setHost(p.getProperty("ip").trim());
+			setPort(p.getProperty("port").trim());
+			setDatabase(p.getProperty("database").trim());
+			setId(p.getProperty("id").trim());
+			setPassword(p.getProperty("password").trim());
+			setSchema(p.getProperty("schema").trim());
+			setCoordsys(p.getProperty("usercoordsys").trim());
 			setIndex(Indexer);
 			setLang(lang);
 			// Key 값 저장

@@ -39,6 +39,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class DataCenterView extends JFrame {
+
 	// private int value=0;
 	// static JProgressBar progressBar;
 	static JButton btnLoad;
@@ -397,13 +398,13 @@ public class DataCenterView extends JFrame {
 				String id = txt_id.getText();
 				String pass = txt_pass.getText();
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type);
-				params.put("host", Ip);
+				params.put("dbtype", type.trim());
+				params.put("host", Ip.trim());
 				params.put("port", Pt);
-				params.put("schema", Schema);
-				params.put("database", db);
-				params.put("user", id);
-				params.put("passwd", pass);
+				params.put("schema", Schema.trim());
+				params.put("database", db.trim());
+				params.put("user", id.trim());
+				params.put("passwd", pass.trim());
 				Lang = cb_Lang.getSelectedItem().toString();
 		    	CoordSys = cb_coord.getSelectedItem().toString();
 
@@ -445,13 +446,13 @@ public class DataCenterView extends JFrame {
 				String pass = txt_pass.getText();
 
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type);
-				params.put("host", Ip);
+				params.put("dbtype", type.trim());
+				params.put("host", Ip.trim());
 				params.put("port", Pt);
-				params.put("schema", Schema);
-				params.put("database", db);
-				params.put("user", id);
-				params.put("passwd", pass);
+				params.put("schema", Schema.trim());
+				params.put("database", db.trim());
+				params.put("user", id.trim());
+				params.put("passwd", pass.trim());
 
 				String[] layers = dbms.LayerList(params);
 				if(layers.length==0) {
@@ -489,13 +490,13 @@ public class DataCenterView extends JFrame {
 				String id = txt_id.getText();
 				String pass = txt_pass.getText();
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type);
-				params.put("host", Ip);
+				params.put("dbtype", type.trim());
+				params.put("host", Ip.trim());
 				params.put("port", Pt);
-				params.put("schema", Schema);
-				params.put("database", db);
-				params.put("user", id);
-				params.put("passwd", pass);
+				params.put("schema", Schema.trim());
+				params.put("database", db.trim());
+				params.put("user", id.trim());
+				params.put("passwd", pass.trim());
 				params.put("validate connections", true);
 
 				// System.out.println(""+scr);
