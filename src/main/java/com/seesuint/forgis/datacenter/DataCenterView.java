@@ -64,8 +64,17 @@ public class DataCenterView extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				DataCenterView form = new DataCenterView();
-				form.setVisible(true);
+
+				DataCenterView form;
+				try {
+
+					form = new DataCenterView();
+
+					form.setVisible(true);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		});
@@ -78,6 +87,25 @@ public class DataCenterView extends JFrame {
 		setBackground(UIManager.getColor("Button.darkShadow"));
 		ConfigManager conf = new ConfigManager();
 		DbManager db = new DbManager();
+	     //ConfigManager conf = new ConfigManager();
+	     String[] lic = conf.getLicense();
+	     LicenseChecker lm = new LicenseChecker();
+	    String title = lm.getLicenseTitle(lic);
+	     Boolean ret = lm.init(lic);
+
+	     System.out.println("*"+title+ret);
+
+	     setTitle("ForGIS DataCenter Ver 1.0 "+title);
+
+	     if(ret==true) {
+	    	 dispose();
+	     }else {
+
+	     }
+
+	//	System.out.println(lic);
+
+
 		CoordinateManager coordlst = new CoordinateManager();
 		setSize(656, 652);
 		setLocation(500, 280);
