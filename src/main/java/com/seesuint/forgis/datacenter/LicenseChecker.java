@@ -18,6 +18,8 @@ public class LicenseChecker {
 	    String Til=null;
 		if(arr[1].equals("D")) {
 			Til="Demo Version";
+		} else {
+			Til ="";
 		}
 
 
@@ -53,6 +55,8 @@ public class LicenseChecker {
 		  }
 
 
+		} else {
+			ret = false;
 		}
 
   		return ret;

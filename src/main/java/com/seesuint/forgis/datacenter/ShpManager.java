@@ -96,13 +96,16 @@ public class ShpManager {
                 t.rollback();
             } catch (IOException doubleEeek) {
                 // rollback failed?
+            } finally {
+            	featureSource=null;
+            	bstore.dispose();
             }
         } finally {
             t.close();
             dbstore.dispose();
             dataStore =null;
         }
-        
+
        // return dataStore;
     //}
 	}

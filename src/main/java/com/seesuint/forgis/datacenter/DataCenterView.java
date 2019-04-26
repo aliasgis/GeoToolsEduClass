@@ -607,6 +607,8 @@ public class DataCenterView extends JFrame {
 			      dir = chooser.getSelectedFile();
 			      try {
 					shp.DbToShp(layernm, dir);
+					  JOptionPane.showMessageDialog(frame," 선택 된 경로에 "+layernm+" shp 파일이 생성되었습니다.", "ForGIS DataCenter",
+								JOptionPane.INFORMATION_MESSAGE);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -614,11 +616,13 @@ public class DataCenterView extends JFrame {
 
 			    } else {
 			      System.out.println("No Selection ");
+
+
+				    JOptionPane.showMessageDialog(frame," 선택 된  경로가 없습니다.", "ForGIS DataCenter",
+							JOptionPane.INFORMATION_MESSAGE);
 			    }
 
 
-			    JOptionPane.showMessageDialog(frame," 선택 된 경로에 "+layernm+" shp 파일이 생성되었습니다.", "ForGIS DataCenter",
-						JOptionPane.INFORMATION_MESSAGE);
 			    Cursor EndCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 				setCursor(EndCursor);
 
