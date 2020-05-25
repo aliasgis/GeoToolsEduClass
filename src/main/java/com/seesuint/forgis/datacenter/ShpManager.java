@@ -15,6 +15,7 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.Transaction;
+import org.geotools.data.mysql.MySQLDataStoreFactory;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -66,7 +67,10 @@ public class ShpManager {
          SimpleFeature feature;
 		dbstore = DataStoreFinder.getDataStore(map);
 
-		SimpleFeatureSource featureSource = dbstore.getFeatureSource(tblname);
+		//SimpleFeatureSource featureSource = dbstore.getFeatureSource(tblname);
+		//MySQLDataStoreFactory.DATABASE.key.
+		SimpleFeatureSource featureSource = dbstore.getFeatureSource("cities");
+
         SimpleFeatureType ft = featureSource.getSchema();
 
         String fileName = ft.getTypeName();
@@ -88,6 +92,7 @@ public class ShpManager {
         Transaction t = new DefaultTransaction();
         try {
             SimpleFeatureCollection collection = featureSource.getFeatures(); // grab all features
+            //collection.getSchema().getGeometryD
             featureStore.addFeatures(collection);
             t.commit(); // write it out
         } catch (IOException eek) {
@@ -102,7 +107,7 @@ public class ShpManager {
             dbstore.dispose();
             dataStore =null;
         }
-        
+
        // return dataStore;
     //}
 	}

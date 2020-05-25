@@ -22,7 +22,7 @@ import org.opengis.referencing.operation.MathTransform;
 public class DataCenter {
 
 	public static void main(String[] args) throws FactoryException {
-		String shapeFileLoc = "D:\\01.시선\\forgis데이터\\eastseabig.shp"; // shapefile 위치
+		String shapeFileLoc = "E:\\07.강서구\\DB\\welfare\\어린이집.shp"; // shapefile 위치
 		String postGISTblName = "DataCenter_Sample803";// 생성테이블명
 		String shapeEPSG = "EPSG:4326";// epsg
 		String init = null;

@@ -11,21 +11,17 @@ public class OgrTest03 {
 	public static void main(String[] args) throws IOException {
 
 		ogr.RegisterAll();
-
-		System.out.println(ogr.Open("c:\\\\dxf\\\\RDL_TREE_PS.dxf"));
-
-		DataSource ds = ogr.Open("c:\\dxf\\RDL_TREE_PS.dxf");
+		DataSource ds = ogr.Open("c:\\dxf\\export.dxf");
 		Driver drv = ds.GetDriver();
 		System.out.println(drv.getName());
 
 		System.out.println("	layer 갯수:" + ds.GetLayerCount());
 
-		Driver Targetdrv = ogr.GetDriverByName("GML");
-		String trgPath = "c:\\dxf\\RDL_TREE_PS.gml"; // export geojson destination path
+		Driver Targetdrv = ogr.GetDriverByName("ESRI shapefile");
+		String trgPath = "c:\\dxf\\export.shp"; // export geojson destination path
 		DataSource trgDataset = Targetdrv.CreateDataSource(trgPath, null);
 
 		Layer Olayer = ds.GetLayerByIndex(0);
-
 		trgDataset.CopyLayer(Olayer, Olayer.GetName(), null);
 
 		System.out.println("	layer :" + Olayer.GetName());

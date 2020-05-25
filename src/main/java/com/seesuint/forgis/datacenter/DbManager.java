@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureStore;
+import org.geotools.data.mysql.MySQLDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
@@ -35,6 +36,7 @@ public class DbManager {
 		System.out.print(conf.getSchema());
 		Map DBGISParams = new HashMap<String, Object>();
 
+		if(conf.getDbType().contentEquals("postgis")) {
 		DBGISParams.put("dbtype", conf.getDbType()); // must be postgis
 		DBGISParams.put("host", conf.getHost()); // the name or ip address of the machine running PostGIS
 		DBGISParams.put("port", conf.getPort()); // the port that PostGIS is running on (generally 5432)
@@ -44,7 +46,16 @@ public class DbManager {
 		DBGISParams.put("schema", conf.getSchema()); // the schema of the database
 		DBGISParams.put("create spatial index", conf.getIndex());
 		DBGISParams.put("charset", conf.getLang());
+		} else {
 
+		DBGISParams.put(MySQLDataStoreFactory.DBTYPE.key, conf.getDbType());
+		DBGISParams.put(MySQLDataStoreFactory.HOST.key, conf.getHost());
+		DBGISParams.put(MySQLDataStoreFactory.PORT.key, conf.getPort());
+		//params.put("schema", Schema.trim());
+		DBGISParams.put(MySQLDataStoreFactory.DATABASE.key, conf.getDatabase());
+		DBGISParams.put(MySQLDataStoreFactory.USER.key, conf.getId());
+		DBGISParams.put(MySQLDataStoreFactory.PASSWD.key, conf.getPassword());
+		}
 		return DBGISParams;
 	}
 
@@ -162,22 +173,23 @@ public class DbManager {
 
 	public void SpatialToDB(Map map, SimpleFeatureType st, FeatureCollection fCollection, String TName) {
 
-		DataStore dataStore1 = null;
+		DataStore dataStore = null;
 		try {
-			dataStore1 = DataStoreFinder.getDataStore(map);
-			String[] sty = dataStore1.getTypeNames();
+			dataStore = DataStoreFinder.getDataStore(map);
+			String[] sty = dataStore.getTypeNames();
 
 			boolean ret = useArraysBinarySearch(sty, TName);
 			// System.out.println("**************:"+ret);
 			if (ret == false) {
-				dataStore1.createSchema(st);
-				FeatureStore<SimpleFeatureType, SimpleFeature> featStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) dataStore1
+				dataStore.createSchema(st);
+				FeatureStore<SimpleFeatureType, SimpleFeature> featStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) dataStore
 						.getFeatureSource(TName);
+				System.out.println(fCollection.getSchema().getGeometryDescriptor().getType().toString());
 				featStore.addFeatures(fCollection);
 			} else {
-				dataStore1.removeSchema(TName);
-				dataStore1.createSchema(st);
-				FeatureStore<SimpleFeatureType, SimpleFeature> featStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) dataStore1
+				dataStore.removeSchema(TName);
+				dataStore.createSchema(st);
+				FeatureStore<SimpleFeatureType, SimpleFeature> featStore = (FeatureStore<SimpleFeatureType, SimpleFeature>) dataStore
 						.getFeatureSource(TName);
 				featStore.addFeatures(fCollection);
 			}
@@ -185,7 +197,7 @@ public class DbManager {
 		} catch (Exception e) {
 			System.out.println("error2!!" + e.getMessage());
 		}
-		dataStore1.dispose();
+		dataStore.dispose();
 
 	}
 

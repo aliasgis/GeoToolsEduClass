@@ -36,7 +36,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import org.geotools.data.mysql.MySQLDataStoreFactory;
 
 public class DataCenterView extends JFrame {
 
@@ -398,13 +398,29 @@ public class DataCenterView extends JFrame {
 				String id = txt_id.getText();
 				String pass = txt_pass.getText();
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type.trim());
-				params.put("host", Ip.trim());
-				params.put("port", Pt);
-				params.put("schema", Schema.trim());
-				params.put("database", db.trim());
-				params.put("user", id.trim());
-				params.put("passwd", pass.trim());
+				if(type.trim().equals("postgis")) {
+					//Map<String, Object> params = new HashMap();
+							params.put("dbtype", type.trim());
+							params.put("host", Ip.trim());
+							params.put("port", Pt);
+							params.put("schema", Schema.trim());
+							params.put("database", db.trim());
+							params.put("user", id.trim());
+							params.put("passwd", pass.trim());
+							params.put("validate connections", true);
+					}else if(type.trim().equals("mysql")) {
+
+						params.put(MySQLDataStoreFactory.DBTYPE.key, type.trim());
+						params.put(MySQLDataStoreFactory.HOST.key, Ip.trim());
+						params.put(MySQLDataStoreFactory.PORT.key, Pt);
+						//params.put("schema", Schema.trim());
+						params.put(MySQLDataStoreFactory.DATABASE.key, db.trim());
+						params.put(MySQLDataStoreFactory.USER.key, id.trim());
+						params.put(MySQLDataStoreFactory.PASSWD.key, pass.trim());
+	                   // params.put(MySQLDataStoreFactory.DATASOURCE.key,"maria");
+
+
+					}
 				Lang = cb_Lang.getSelectedItem().toString();
 		    	CoordSys = cb_coord.getSelectedItem().toString();
 
@@ -416,7 +432,12 @@ public class DataCenterView extends JFrame {
 				Boolean sp_gb = cSpatial.isSelected();
 
 				DataCenter dc = new DataCenter();
+				MariaDBManager md = new MariaDBManager();
+				if(type.trim().equals("postgis")) {
 				dc.DbProc(params, Path, TName, sp_gb, Lang, CoordSys);
+				}else {
+             			md.ShpToMaria(Ip, db, Pt, id, pass, Path,Lang);
+				}
 				btnLoad.setEnabled(true);
 				btnButton.setEnabled(true);
 
@@ -446,13 +467,29 @@ public class DataCenterView extends JFrame {
 				String pass = txt_pass.getText();
 
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type.trim());
-				params.put("host", Ip.trim());
-				params.put("port", Pt);
-				params.put("schema", Schema.trim());
-				params.put("database", db.trim());
-				params.put("user", id.trim());
-				params.put("passwd", pass.trim());
+				if(type.trim().equals("postgis")) {
+					//Map<String, Object> params = new HashMap();
+							params.put("dbtype", type.trim());
+							params.put("host", Ip.trim());
+							params.put("port", Pt);
+							params.put("schema", Schema.trim());
+							params.put("database", db.trim());
+							params.put("user", id.trim());
+							params.put("passwd", pass.trim());
+							params.put("validate connections", true);
+					}else if(type.trim().equals("mysql")) {
+
+						params.put(MySQLDataStoreFactory.DBTYPE.key, type.trim());
+						params.put(MySQLDataStoreFactory.HOST.key, Ip.trim());
+						params.put(MySQLDataStoreFactory.PORT.key, Pt);
+						//params.put("schema", Schema.trim());
+						params.put(MySQLDataStoreFactory.DATABASE.key, db.trim());
+						params.put(MySQLDataStoreFactory.USER.key, id.trim());
+						params.put(MySQLDataStoreFactory.PASSWD.key, pass.trim());
+	                   // params.put(MySQLDataStoreFactory.DATASOURCE.key,"maria");
+
+
+					}
 
 				String[] layers = dbms.LayerList(params);
 				if(layers.length==0) {
@@ -490,15 +527,42 @@ public class DataCenterView extends JFrame {
 				String id = txt_id.getText();
 				String pass = txt_pass.getText();
 				Map<String, Object> params = new HashMap();
-				params.put("dbtype", type.trim());
-				params.put("host", Ip.trim());
-				params.put("port", Pt);
-				params.put("schema", Schema.trim());
-				params.put("database", db.trim());
-				params.put("user", id.trim());
-				params.put("passwd", pass.trim());
-				params.put("validate connections", true);
 
+				System.out.println("기종:"+type);
+				if(type.trim().equals("postgis")) {
+				//Map<String, Object> params = new HashMap();
+						params.put("dbtype", type.trim());
+						params.put("host", Ip.trim());
+						params.put("port", Pt);
+						params.put("schema", Schema.trim());
+						params.put("database", db.trim());
+						params.put("user", id.trim());
+						params.put("passwd", pass.trim());
+						params.put("validate connections", true);
+				}else if(type.trim().equals("mysql")) {
+
+					params.put(MySQLDataStoreFactory.DBTYPE.key, type.trim());
+					params.put(MySQLDataStoreFactory.HOST.key, Ip.trim());
+					params.put(MySQLDataStoreFactory.PORT.key, Pt);
+					//params.put("schema", Schema.trim());
+					params.put(MySQLDataStoreFactory.DATABASE.key, db.trim());
+					params.put(MySQLDataStoreFactory.USER.key, id.trim());
+					params.put(MySQLDataStoreFactory.PASSWD.key, pass.trim());
+                   // params.put(MySQLDataStoreFactory.DATASOURCE.key,"maria");
+
+
+				}
+               /**
+			//	params.put(MySQLDataStoreFactory.DBTYPE.key, type.trim());
+				params.put(MySQLDataStoreFactory.HOST.key, Ip.trim());
+				params.put(MySQLDataStoreFactory.PORT.key, Pt);
+				//params.put("schema", Schema.trim());
+				params.put(MySQLDataStoreFactory.DATABASE.key, db.trim());
+				params.put(MySQLDataStoreFactory.USER.key, id.trim());
+				params.put(MySQLDataStoreFactory.PASSWD.key, pass.trim());
+					params.put("validate connections", true);
+               **/
+			//	}
 				// System.out.println(""+scr);
 				JFrame frame = new JFrame("JOptionPane showMessageDialog example");
 				DbManager dbms = new DbManager();

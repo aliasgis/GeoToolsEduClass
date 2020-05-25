@@ -19,15 +19,15 @@ public class OgrTest02 {
 	public static void main(String[] args) throws Exception {
 		OGRDataStoreFactory factory = new JniOGRDataStoreFactory();
 		Map<String, String> connectionParams = new HashMap<String, String>();
-		connectionParams.put("DriverName", "DXF");
-		connectionParams.put("DatasourceName", new File("c:\\dxf\\1_export.dxf").getAbsolutePath());
+		connectionParams.put("DriverName", "OpenFileGDB");
+		connectionParams.put("DatasourceName", new File("D:\\test_fgdb.gdb.zip").getAbsolutePath());
 		System.out.println("========================");
 		DataStore store = factory.createDataStore(connectionParams);
 		System.out.println(store.getNames().get(0));
 		System.out.println(store.getInfo());
 		System.out.println(store.getTypeNames());
 		System.out.println("========================");
-
+        /**
 		SimpleFeatureSource source = store.getFeatureSource("entities");
 		System.out.println(source);
 
@@ -40,5 +40,6 @@ public class OgrTest02 {
 		} finally {
 			it.close();
 		}
+		**/
 	}
 }
